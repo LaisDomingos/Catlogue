@@ -68,3 +68,6 @@ O app também funciona **offline**, armazenando os dados localmente.
 - Para fazer a conexão com a API, criei uma instância do Retrofit em um singleton chamado RetrofitInstance, configurando a URL base da Cat API e adicionando um interceptor para inserir o token de autenticação em todas as requisições.
 - Depois, implementei a camada de dados com a Repository, criando a classe BreedRepository para centralizar o acesso aos dados da API, facilitando o gerenciamento e a manutenção futura do código.
 - Criei a BreedViewModel, que é responsável por buscar os dados da Repository, armazenar o estado da lista de raças, controlar os estados de carregamento e erro, e expor esses estados para a UI de forma reativa usando StateFlow. Isso permite que a interface observe mudanças e atualize automaticamente conforme os dados chegam ou ocorrem erros.
+- Implementei o banco local usando Room, criando as entidades BreedEntity, WeightEntity e BreedImageEntity para armazenar as raças, o DAO para acesso ao banco, o AppDatabase que conecta tudo, e um singleton para inicializar o banco.
+- Obs.: O próximo passo é integrar o Room no BreedRepository, para que os dados possam ser buscados da API e armazenados localmente, permitindo funcionamento offline e cache dos dados.
+

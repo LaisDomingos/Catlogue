@@ -8,7 +8,7 @@ data class Breed(
     val temperament: String,
     val description: String,
     @SerializedName("life_span")
-    val lifeSpan: String,
+    val lifeSpan: String?,
     val weight: Weight,
     val image: BreedImage?
 )
