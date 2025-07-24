@@ -44,3 +44,19 @@ O app também funciona **offline**, armazenando os dados localmente.
 - **Tratamento de erros** (sem internet, falha de API)
 - **Testes unitários e de integração**
 - **Design modular** do projeto
+
+## Estrutura
+├── data/
+│   ├── model/         ← classes de dados (Breed, etc)
+│   ├── remote/        ← Retrofit e API
+│   ├── local/         ← Room (DAO, DB, entidades locais)
+│   └── repository/    ← onde a ViewModel busca os dados
+├── ui/
+│   ├── screens/       ← uma subpasta por tela
+│   │   ├── breedlist/     ← tela da lista de raças
+│   │   ├── breeddetails/  ← tela de detalhes
+│   │   └── favorites/     ← tela de favoritos
+│   └── components/    ← componentes reutilizáveis (ex: Card, botão favorito etc)
+├── viewmodel/         ← ViewModels das telas
+└── MainActivity.kt    ← ponto de entrada
+
