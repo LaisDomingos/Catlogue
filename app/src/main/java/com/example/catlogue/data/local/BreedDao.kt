@@ -10,9 +10,10 @@ interface BreedDao {
 
     // Pega todas as raças salvas no banco
     @Query("SELECT * FROM breeds")
-    suspend fun getAllBreeds(): List<BreedEntity>
+    fun getAllBreeds(): List<BreedEntity>
 
     // Insere ou atualiza a lista de raças (se conflito, substitui)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBreeds(breeds: List<BreedEntity>)
+    fun insertBreeds(breeds: List<BreedEntity>)
+
 }

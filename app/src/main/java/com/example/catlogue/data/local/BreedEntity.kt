@@ -12,8 +12,8 @@ data class BreedEntity(
     val temperament: String,
     val description: String,
     val lifeSpan: String?,
-    @Embedded val weight: WeightEntity,
-    @Embedded val image: BreedImageEntity?
+    @Embedded(prefix = "weight_") val weight: WeightEntity,
+    @Embedded(prefix = "image_") val image: BreedImageEntity?
 )
 
 data class WeightEntity(
@@ -25,5 +25,5 @@ data class BreedImageEntity(
     val id: String?,
     val width: Int?,
     val height: Int?,
-    val url: String
+    val url: String?
 )
