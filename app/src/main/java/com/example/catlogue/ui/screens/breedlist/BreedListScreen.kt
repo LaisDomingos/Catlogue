@@ -1,6 +1,7 @@
 package com.example.catlogue.ui.screens.breedlist
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.catlogue.data.model.Breed
-import com.example.catlogue.ui.components.NavBar
-import androidx.compose.foundation.background
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +32,7 @@ fun BreedListScreen(
     }
 
     Scaffold(
-        topBar = { NavBar() }
+        // Sem topBar (NavBar removido)
     ) { innerPadding ->
         Column(
             modifier = modifier
@@ -47,7 +46,8 @@ fun BreedListScreen(
                 label = { Text("Buscar raça") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(16.dp, vertical = 1.dp),
+                shape = RoundedCornerShape(24.dp)
             )
 
             // Grid com 2 colunas
@@ -56,7 +56,9 @@ fun BreedListScreen(
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .padding(innerPadding) // aplica só aqui
+                    .fillMaxSize()
             ) {
                 items(filteredBreeds) { breed ->
                     BreedGridItem(breed)

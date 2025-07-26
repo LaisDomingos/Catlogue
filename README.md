@@ -71,6 +71,7 @@ O app também funciona **offline**, armazenando os dados localmente.
 - Implementei o banco local usando Room, criando as entidades BreedEntity, WeightEntity e BreedImageEntity para armazenar as raças, o DAO para acesso ao banco, o AppDatabase que conecta tudo, e um singleton para inicializar o banco.
 - Conectei o banco de dados local (Room) ao BreedRepository, garantindo que os dados retornados da API fossem salvos localmente. 
 - Configurei a aplicação para exibir as raças salvas diretamente na tela usando Compose, e exibir no Logcat as raças armazenadas no banco local, como forma de verificar se o salvamento offline está funcionando corretamente.
-- Desenvolvi a NavBar e a tela home com a exibição das fotos e raça dos gatos, tendo um botão de favoritar apenas ilustrativo.
+- Desenvolvi a NavBar e a tela home com a exibição das fotos e raça dos gatos, tendo um botão de favoritar apenas ilustrativo. Inserir o filtro por nome da raça.
+- Desenvolvi a BottomNavBar e corrigi a chamada do NavBar no MainActivity.
 
 

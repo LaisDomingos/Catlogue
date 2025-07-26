@@ -44,7 +44,7 @@ fun NavBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF2196F3)
+            containerColor = Color(0xFF0D47A1) // Azul escuro
         )
     )
 }
