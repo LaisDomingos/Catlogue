@@ -35,5 +35,5 @@ fun BottomNavBar(
 
 enum class BottomNavItem(val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
     Home("Home", Icons.Filled.Home),
-    Favorite("Favorito", Icons.Filled.Favorite)
+    Favorite("Favorites", Icons.Filled.Favorite)
 }

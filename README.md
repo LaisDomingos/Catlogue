@@ -73,5 +73,5 @@ O app também funciona **offline**, armazenando os dados localmente.
 - Configurei a aplicação para exibir as raças salvas diretamente na tela usando Compose, e exibir no Logcat as raças armazenadas no banco local, como forma de verificar se o salvamento offline está funcionando corretamente.
 - Desenvolvi a NavBar e a tela home com a exibição das fotos e raça dos gatos, tendo um botão de favoritar apenas ilustrativo. Inserir o filtro por nome da raça.
 - Desenvolvi a BottomNavBar e corrigi a chamada do NavBar no MainActivity.
-
+- Desenvolvi a tela de detalhes da raça com nome, origem, temperamento e descrição.
 
