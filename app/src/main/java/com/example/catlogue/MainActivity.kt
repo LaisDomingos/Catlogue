@@ -31,10 +31,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dao = DatabaseBuilder.getInstance(applicationContext).breedDao()
+        val database = DatabaseBuilder.getInstance(applicationContext)
+        val dao = database.breedDao()
+        val favoriteDao = database.favoriteDao()
         val apiService = RetrofitInstance.api
         val repository = BreedRepository(apiService, dao)
-        val viewModelFactory = BreedViewModelFactory(repository)
+        val viewModelFactory = BreedViewModelFactory(repository, favoriteDao)
+
         viewModel = ViewModelProvider(this, viewModelFactory).get(BreedViewModel::class.java)
 
         enableEdgeToEdge()
@@ -68,6 +71,7 @@ class MainActivity : ComponentActivity() {
                             BottomNavItem.Home -> {
                                 BreedListScreen(
                                     breeds = breeds.value,
+                                    breedViewModel = viewModel,
                                     modifier = Modifier.padding(paddingValues),
                                     onBreedClick = { breed -> selectedBreed = breed }
                                 )
@@ -88,6 +92,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         BreedDetailsScreen(
                             breed = selectedBreed!!,
+                            viewModel = viewModel,  // PASSEI AQUI
                             modifier = Modifier.padding(paddingValues)
                         )
                     }

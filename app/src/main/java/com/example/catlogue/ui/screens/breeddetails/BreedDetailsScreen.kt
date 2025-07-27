@@ -5,9 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,13 +19,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.catlogue.data.model.Breed
+import com.example.catlogue.viewmodel.BreedViewModel
 
 @Composable
 fun BreedDetailsScreen(
     breed: Breed,
+    viewModel: BreedViewModel,
     modifier: Modifier = Modifier
 ) {
-    val darkBlue = Color(0xFF0D47A1) // azul escuro
+    val darkBlue = Color(0xFF0D47A1)
+
+    // Estado local de favorito
+    var isFavorite by remember { mutableStateOf(false) }
+
+    // Verifica se é favorito ao carregar a tela
+    LaunchedEffect(breed.id) {
+        viewModel.isFavorite(breed.id) { result ->
+            isFavorite = result
+        }
+    }
 
     Column(
         modifier = modifier
@@ -51,7 +64,14 @@ fun BreedDetailsScreen(
                 )
 
                 IconButton(
-                    onClick = { /* favoritar */ },
+                    onClick = {
+                        isFavorite = !isFavorite
+                        if (isFavorite) {
+                            viewModel.addFavorite(breed)
+                        } else {
+                            viewModel.removeFavorite(breed)
+                        }
+                    },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
@@ -61,8 +81,8 @@ fun BreedDetailsScreen(
                         )
                 ) {
                     Icon(
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = "Favoritar",
+                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = if (isFavorite) "Desfavoritar" else "Favoritar",
                         tint = MaterialTheme.colorScheme.error
                     )
                 }
@@ -78,13 +98,13 @@ fun BreedDetailsScreen(
             ) {
                 Text(
                     text = breed.name,
-                    fontSize = 28.sp, // maior
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = darkBlue
                 )
                 Text(
                     text = "Origin: ${breed.origin}",
-                    fontSize = 18.sp, // maior que antes
+                    fontSize = 18.sp,
                     color = darkBlue
                 )
             }

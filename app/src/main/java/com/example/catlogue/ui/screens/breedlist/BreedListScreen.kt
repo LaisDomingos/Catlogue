@@ -2,10 +2,12 @@ package com.example.catlogue.ui.screens.breedlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,24 +20,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.catlogue.data.model.Breed
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
+import com.example.catlogue.viewmodel.BreedViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BreedListScreen(
     breeds: List<Breed>,
+    breedViewModel: BreedViewModel,
     modifier: Modifier = Modifier,
     onBreedClick: (Breed) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
+    // Observa os favoritos do ViewModel
+    val favoriteBreeds by breedViewModel.favoriteBreeds.collectAsState()
+
+    // Filtra os breeds pelo searchQuery
     val filteredBreeds = breeds.filter {
         it.name.contains(searchQuery, ignoreCase = true)
     }
 
+    // Função pra checar se um breed é favorito
+    fun isFavorite(breed: Breed) = favoriteBreeds.any { it.id == breed.id }
+
     Scaffold(
-        // topBar, bottomBar etc
+        // topBar, bottomBar etc podem ser adicionados aqui
     ) { innerPadding ->
         Column(
             modifier = modifier
@@ -64,9 +73,19 @@ fun BreedListScreen(
                 items(filteredBreeds) { breed ->
                     BreedGridItem(
                         breed = breed,
-                        onClick = { onBreedClick(breed) } // Passa o clique aqui
+                        isFavorite = isFavorite(breed),
+                        onToggleFavorite = { b ->
+                            println("DEBUG: Clique no coração do breed ${b.name} (id: ${b.id}), favorito? ${isFavorite(b)}")
+                            if (isFavorite(b)) {
+                                breedViewModel.removeFavorite(b)
+                            } else {
+                                breedViewModel.addFavorite(b)
+                            }
+                        },
+                        onClick = { onBreedClick(breed) }
                     )
                 }
+
             }
         }
     }
@@ -75,13 +94,15 @@ fun BreedListScreen(
 @Composable
 fun BreedGridItem(
     breed: Breed,
+    isFavorite: Boolean,
+    onToggleFavorite: (Breed) -> Unit,
     onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1f)
-            .clickable { onClick() },  // Torna o card clicável
+            .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
@@ -98,15 +119,15 @@ fun BreedGridItem(
             )
 
             IconButton(
-                onClick = { /* lógica de favoritar */ },
+                onClick = { onToggleFavorite(breed) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(8.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = "Favoritar",
-                    tint = MaterialTheme.colorScheme.error
+                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = if (isFavorite) "Desfavoritar" else "Favoritar",
+                    tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
