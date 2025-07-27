@@ -7,5 +7,11 @@ import androidx.room.PrimaryKey
 data class FavoriteEntity(
     @PrimaryKey val breedId: String,
     val name: String,
-    val imageUrl: String?
+    val imageUrl: String?,
+
+    val lifeSpan: String? = null,
+    val origin: String? = null,
+    val temperament: String? = null,
+    val description: String? = null
 )
+

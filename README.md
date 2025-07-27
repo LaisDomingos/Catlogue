@@ -75,4 +75,6 @@ O app também funciona **offline**, armazenando os dados localmente.
 - Desenvolvi a BottomNavBar e corrigi a chamada do NavBar no MainActivity.
 - Desenvolvi a tela de detalhes da raça com nome, origem, temperamento e descrição.
 - Implementei a funcionalidade de favoritos, incluindo na página home e na página de detalhes.
+- Desenvolvi a tela de de favoritos que apresenta também a expectativa de vida.
+
 

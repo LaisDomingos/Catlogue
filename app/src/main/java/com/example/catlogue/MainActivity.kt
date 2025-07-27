@@ -22,7 +22,7 @@ import com.example.catlogue.ui.screens.breeddetails.BreedDetailsScreen
 import com.example.catlogue.ui.theme.CatlogueTheme
 import com.example.catlogue.viewmodel.BreedViewModel
 import com.example.catlogue.viewmodel.BreedViewModelFactory
-
+import com.example.catlogue.ui.screens.favorites.FavoritesScreen
 class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: BreedViewModel
@@ -77,22 +77,18 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             BottomNavItem.Favorite -> {
-                                Surface(
+                                FavoritesScreen(
+                                    breedViewModel = viewModel,
                                     modifier = Modifier.padding(paddingValues),
-                                    color = MaterialTheme.colorScheme.background
-                                ) {
-                                    Text(
-                                        text = "Favoritos (em construção 🛠️)",
-                                        style = MaterialTheme.typography.headlineMedium,
-                                        modifier = Modifier.padding(16.dp)
-                                    )
-                                }
+                                    onBreedClick = { breed -> selectedBreed = breed }
+                                )
                             }
+
                         }
                     } else {
                         BreedDetailsScreen(
                             breed = selectedBreed!!,
-                            viewModel = viewModel,  // PASSEI AQUI
+                            viewModel = viewModel,
                             modifier = Modifier.padding(paddingValues)
                         )
                     }
