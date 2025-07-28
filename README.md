@@ -14,6 +14,9 @@ O app também funciona **offline**, armazenando os dados localmente.
 - **Busca por nome da raça**  
   Permite filtrar a lista digitando o nome da raça desejada.
 
+- **Paginação na lista de raças**
+  Carrega as raças em blocos (páginas), facilitando a navegação e melhorando a performance, evitando sobrecarregar a tela e o banco de dados.
+
 - **Marcar/desmarcar como favorita**  
   Cada raça pode ser favoritada, tanto pela lista quanto pela tela de detalhes.
 
@@ -37,13 +40,6 @@ O app também funciona **offline**, armazenando os dados localmente.
   As raças e favoritos são salvos localmente para funcionar mesmo sem internet.
 
 ---
-
-## 💡 Funcionalidades Extras (se houver tempo)
-
-- **Paginação** na lista de raças (ex: carregar 10 por vez)
-- **Tratamento de erros** (sem internet, falha de API)
-- **Testes unitários e de integração**
-- **Design modular** do projeto
 
 ## 📁 Estrutura
 ```bash
@@ -76,5 +72,6 @@ O app também funciona **offline**, armazenando os dados localmente.
 - Desenvolvi a tela de detalhes da raça com nome, origem, temperamento e descrição.
 - Implementei a funcionalidade de favoritos, incluindo na página home e na página de detalhes.
 - Desenvolvi a tela de de favoritos que apresenta também a expectativa de vida.
+- Implementado a paginação, ele busca sempre as dez primeiras raças e vai carregando a partir disso. O search funciona com os dados carregados.
 
 

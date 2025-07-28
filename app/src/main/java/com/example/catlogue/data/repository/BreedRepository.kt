@@ -6,6 +6,7 @@ import com.example.catlogue.data.model.Breed
 import com.example.catlogue.data.remote.CatApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import android.util.Log
 import com.example.catlogue.data.mapper.toEntity
 import com.example.catlogue.data.mapper.toBreed
 
@@ -15,7 +16,7 @@ class BreedRepository(
 ) {
 
     // Função principal que busca os dados, da API ou do banco local
-    suspend fun getBreeds(): List<Breed> = withContext(Dispatchers.IO) {
+    /*suspend fun getBreeds(): List<Breed> = withContext(Dispatchers.IO) {
         try {
             // 1. Tenta buscar da API
             val apiBreeds = apiService.getBreeds()
@@ -31,5 +32,20 @@ class BreedRepository(
             val localBreeds = breedDao.getAllBreeds()
             localBreeds.map { it.toBreed() } // conversão de volta
         }
+    }*/
+    suspend fun getBreedsPaginated(limit: Int, page: Int): List<Breed> = withContext(Dispatchers.IO) {
+        try {
+            Log.d("BreedRepo", "Fazendo chamada com limit=$limit e page=$page")
+            val result = apiService.getBreeds(limit, page)
+            Log.d("BreedRepo", "Resultado: ${result.size} raças")
+            result
+        } catch (e: Exception) {
+            Log.e("BreedRepo", "Erro na chamada: ${e.message}")
+            emptyList()
+        }
     }
+
+
+
+
 }

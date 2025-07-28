@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Alignment
 import com.example.catlogue.data.model.Breed
 import com.example.catlogue.viewmodel.BreedViewModel
 import com.example.catlogue.ui.components.BreedGridItem
@@ -15,13 +16,12 @@ import com.example.catlogue.ui.components.BreedGridItem
 @Composable
 fun BreedListScreen(
     breeds: List<Breed>,
-    breedViewModel: BreedViewModel,
+    breedViewModel: BreedViewModel, // seu viewModel já está aqui
     modifier: Modifier = Modifier,
     onBreedClick: (Breed) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
-    // Observa os favoritos do ViewModel
     val favoriteBreeds by breedViewModel.favoriteBreeds.collectAsState()
 
     // Filtra os breeds pelo searchQuery
@@ -29,12 +29,12 @@ fun BreedListScreen(
         it.name.contains(searchQuery, ignoreCase = true)
     }
 
-    // Função pra checar se um breed é favorito
     fun isFavorite(breed: Breed) = favoriteBreeds.any { it.id == breed.id }
 
-    Scaffold(
-        // topBar, bottomBar etc podem ser adicionados aqui
-    ) { innerPadding ->
+    val isLoading by breedViewModel.isLoading.collectAsState()
+
+    Scaffold {
+            innerPadding ->
         Column(
             modifier = modifier
                 .padding(innerPadding)
@@ -50,21 +50,13 @@ fun BreedListScreen(
                 shape = RoundedCornerShape(24.dp)
             )
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-            ) {
-                items(filteredBreeds) { breed ->
+            LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                items(filteredBreeds.size) { index ->
+                    val breed = filteredBreeds[index]
                     BreedGridItem(
                         breed = breed,
                         isFavorite = isFavorite(breed),
                         onToggleFavorite = { b ->
-                            println("DEBUG: Clique no coração do breed ${b.name} (id: ${b.id}), favorito? ${isFavorite(b)}")
                             if (isFavorite(b)) {
                                 breedViewModel.removeFavorite(b)
                             } else {
@@ -73,12 +65,25 @@ fun BreedListScreen(
                         },
                         onClick = { onBreedClick(breed) }
                     )
+
+                    // Quando chegar no fim, carrega mais
+                    if (index >= breedViewModel.breeds.value.size - 1 && !isLoading) {
+                        breedViewModel.loadMoreBreeds()
+                    }
                 }
 
+                // Mostrar progress indicator enquanto carrega
+                if (isLoading) {
+                    item(span = { GridItemSpan(2) }) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .wrapContentWidth(Alignment.CenterHorizontally)
+                        )
+                    }
+                }
             }
         }
     }
 }
-
-
-

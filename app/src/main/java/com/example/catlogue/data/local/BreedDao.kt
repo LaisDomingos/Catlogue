@@ -8,12 +8,14 @@ import androidx.room.Query
 @Dao
 interface BreedDao {
 
-    // Pega todas as raças salvas no banco
     @Query("SELECT * FROM breeds")
     fun getAllBreeds(): List<BreedEntity>
 
-    // Insere ou atualiza a lista de raças (se conflito, substitui)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertBreeds(breeds: List<BreedEntity>)
 
+    // Método paginado: usa LIMIT e OFFSET para pegar pedaço do banco
+    @Query("SELECT * FROM breeds LIMIT :limit OFFSET :offset")
+    fun getBreedsPaginated(limit: Int, offset: Int): List<BreedEntity>
 }
+
