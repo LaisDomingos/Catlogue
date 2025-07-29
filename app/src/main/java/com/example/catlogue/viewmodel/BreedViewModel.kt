@@ -42,6 +42,10 @@ class BreedViewModel(
         loadMoreBreeds()
     }
 
+    fun clearError() {
+        _error.value = null
+    }
+
     fun loadMoreBreeds() {
         if (_isLoading.value || endReached) return
 
@@ -67,7 +71,6 @@ class BreedViewModel(
             }
         }
     }
-
 
     fun addFavorite(breed: Breed) {
         viewModelScope.launch(Dispatchers.IO) {

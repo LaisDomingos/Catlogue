@@ -21,9 +21,17 @@ fun BreedListScreen(
     onBreedClick: (Breed) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
-
     val favoriteBreeds by breedViewModel.favoriteBreeds.collectAsState()
+    val isLoading by breedViewModel.isLoading.collectAsState()
+    val errorMessage by breedViewModel.error.collectAsState()
 
+    // Controle para exibir AlertDialog
+    var showDialog by remember { mutableStateOf(false) }
+
+    // Sempre que errorMessage mudar, decide se mostra o dialog
+    LaunchedEffect(errorMessage) {
+        showDialog = !errorMessage.isNullOrEmpty()
+    }
     // Filtra os breeds pelo searchQuery
     val filteredBreeds = breeds.filter {
         it.name.contains(searchQuery, ignoreCase = true)
@@ -31,7 +39,7 @@ fun BreedListScreen(
 
     fun isFavorite(breed: Breed) = favoriteBreeds.any { it.id == breed.id }
 
-    val isLoading by breedViewModel.isLoading.collectAsState()
+
 
     Scaffold {
             innerPadding ->
@@ -86,4 +94,26 @@ fun BreedListScreen(
             }
         }
     }
+    // AlertDialog para mostrar erro
+    if (showDialog && !errorMessage.isNullOrEmpty()) {
+        AlertDialog(
+            onDismissRequest = {
+                showDialog = false
+                breedViewModel.clearError()
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDialog = false
+                        breedViewModel.clearError()
+                    }
+                ) {
+                    Text("OK")
+                }
+            },
+            title = { Text("Erro") },
+            text = { Text(errorMessage ?: "Erro desconhecido") }
+        )
+    }
+
 }

@@ -20,19 +20,24 @@ fun FavoritesScreen(
     modifier: Modifier = Modifier,
     onBreedClick: (Breed) -> Unit
 ) {
-    // Pega direto a lista de favoritos do ViewModel
     val favoriteBreeds by breedViewModel.favoriteBreeds.collectAsState()
+    val errorMessage by breedViewModel.error.collectAsState()
 
-    Scaffold(
-        // topBar, bottomBar etc podem ser adicionados aqui se quiser
-    ) { innerPadding ->
+    // Controla se o dialog está visível
+    var showDialog by remember { mutableStateOf(false) }
+
+    // Toda vez que errorMessage mudar, decide mostrar dialog
+    LaunchedEffect(errorMessage) {
+        showDialog = !errorMessage.isNullOrEmpty()
+    }
+
+    Scaffold { innerPadding ->
         Column(
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
             if (favoriteBreeds.isEmpty()) {
-                // Mensagem bonitinha quando não tem favoritos ainda
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -56,7 +61,6 @@ fun FavoritesScreen(
                             breed = breed,
                             isFavorite = true,
                             onToggleFavorite = { b ->
-                                // Permite desfavoritar direto aqui
                                 breedViewModel.removeFavorite(b)
                             },
                             onClick = { onBreedClick(breed) },
@@ -65,6 +69,28 @@ fun FavoritesScreen(
                     }
                 }
             }
+        }
+
+        // AlertDialog para mostrar o erro
+        if (showDialog && !errorMessage.isNullOrEmpty()) {
+            AlertDialog(
+                onDismissRequest = {
+                    showDialog = false
+                    breedViewModel.clearError()
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDialog = false
+                            breedViewModel.clearError()
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                },
+                title = { Text("Erro") },
+                text = { Text(errorMessage ?: "Erro desconhecido") }
+            )
         }
     }
 }

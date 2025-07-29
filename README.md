@@ -1,77 +1,82 @@
-# 📱 Catlogue – App de Raças de Gatos 🐱
-**Catlogue** (Cat + Catálogo) é um aplicativo Android desenvolvido em **Kotlin**, com **Jetpack Compose**, que consome a [Cat API](https://thecatapi.com/) para exibir uma lista de raças de gatos.
-
-O objetivo é permitir que o usuário visualize as raças disponíveis, veja detalhes de cada uma e salve suas favoritas.  
-O app também funciona **offline**, armazenando os dados localmente.
-
----
+#📱 Catlogue – App de Raças de Gatos 🐱
+**Resumo**:
+Catlogue é um app Android desenvolvido em Kotlin com Jetpack Compose que consome a Cat API para exibir raças de gatos. Permite busca, paginação, favoritos, detalhes e funciona offline usando Room. Também possui tratamento de erros com AlertDialog para melhor experiência do usuário.
 
 ## ✅ Funcionalidades do App
-
-- **Listagem de raças de gatos**  
+- Listagem de raças de gatos
   Exibe uma lista com nome e imagem de cada raça.
 
-- **Busca por nome da raça**  
+- Busca por nome da raça
   Permite filtrar a lista digitando o nome da raça desejada.
 
-- **Paginação na lista de raças**
-  Carrega as raças em blocos (páginas), facilitando a navegação e melhorando a performance, evitando sobrecarregar a tela e o banco de dados.
+- Paginação na lista de raças
+  Carrega as raças em blocos (páginas), facilitando a navegação e melhorando a performance.
 
-- **Marcar/desmarcar como favorita**  
+- Marcar/desmarcar como favorita
   Cada raça pode ser favoritada, tanto pela lista quanto pela tela de detalhes.
 
-- **Tela de favoritos**  
-  Mostra apenas as raças marcadas como favoritas.
+- Tela de favoritos
+  Exibe somente as raças favoritas do usuário.
 
-- **Expectativa de vida média dos favoritos**  
-  Exibe a média de expectativa de vida das raças favoritas.
+- Expectativa de vida média dos favoritos
+  Mostra a média de expectativa de vida das raças favoritas.
 
-- **Tela de detalhes da raça**  
-  Exibe informações completas:
-  - Nome  
-  - Origem  
-  - Temperamento  
-  - Descrição
+- Tela de detalhes da raça
+  Informações completas da raça, incluindo nome, origem, temperamento e descrição.
 
-- **Navegação entre telas**  
-  O app permite navegar entre a lista, favoritos e detalhes usando **Jetpack Navigation**.
+- Navegação entre telas
+  Utiliza Jetpack Navigation para transitar entre lista, favoritos e detalhes.
 
-- **Armazenamento offline com Room**  
-  As raças e favoritos são salvos localmente para funcionar mesmo sem internet.
+- Armazenamento offline com Room
+  Permite acesso às raças e favoritos mesmo sem conexão com a internet.
 
----
+- Tratamento de erros com AlertDialog
+  Mensagens de erro são exibidas para o usuário em diálogos amigáveis.
 
-## 📁 Estrutura
+## 📁 Estrutura do Projeto
 ```bash
 ├── data/
-│   ├── model/         ← classes de dados (Breed, etc)
+│   ├── model/         ← Classes de dados (Breed, etc)
 │   ├── remote/        ← Retrofit e API
 │   ├── local/         ← Room (DAO, DB, entidades locais)
-│   └── repository/    ← onde a ViewModel busca os dados
+│   └── repository/    ← Repositório para acessar dados
 ├── ui/
-│   ├── screens/       ← uma subpasta por tela
-│   │   ├── breedlist/     ← tela da lista de raças
-│   │   ├── breeddetails/  ← tela de detalhes
-│   │   └── favorites/     ← tela de favoritos
-│   └── components/    ← componentes reutilizáveis (ex: Card, botão favorito etc)
-├── viewmodel/         ← ViewModels das telas
-└── MainActivity.kt    ← ponto de entrada
+│   ├── screens/       ← Pastas por tela
+│   │   ├── breedlist/     ← Lista de raças
+│   │   ├── breeddetails/  ← Detalhes da raça
+│   │   └── favorites/     ← Tela de favoritos
+│   └── components/    ← Componentes reutilizáveis (Cards, botões etc)
+├── viewmodel/         ← ViewModels para lógica de UI
+└── MainActivity.kt    ← Entrada principal do app
 ```
-## Passos
 
-- Inicialmente, criei o model Breed para representar os dados das raças de gato, mapeando os campos importantes da resposta JSON da API, como nome, origem, temperamento, descrição, expectativa de vida e imagem.
-- Em seguida, configurei o serviço de comunicação com a API criando a interface CatApiService, que define os endpoints que o aplicativo vai acessar, começando pelo endpoint para buscar a lista de raças.
-- Para fazer a conexão com a API, criei uma instância do Retrofit em um singleton chamado RetrofitInstance, configurando a URL base da Cat API e adicionando um interceptor para inserir o token de autenticação em todas as requisições.
-- Depois, implementei a camada de dados com a Repository, criando a classe BreedRepository para centralizar o acesso aos dados da API, facilitando o gerenciamento e a manutenção futura do código.
-- Criei a BreedViewModel, que é responsável por buscar os dados da Repository, armazenar o estado da lista de raças, controlar os estados de carregamento e erro, e expor esses estados para a UI de forma reativa usando StateFlow. Isso permite que a interface observe mudanças e atualize automaticamente conforme os dados chegam ou ocorrem erros.
-- Implementei o banco local usando Room, criando as entidades BreedEntity, WeightEntity e BreedImageEntity para armazenar as raças, o DAO para acesso ao banco, o AppDatabase que conecta tudo, e um singleton para inicializar o banco.
-- Conectei o banco de dados local (Room) ao BreedRepository, garantindo que os dados retornados da API fossem salvos localmente. 
-- Configurei a aplicação para exibir as raças salvas diretamente na tela usando Compose, e exibir no Logcat as raças armazenadas no banco local, como forma de verificar se o salvamento offline está funcionando corretamente.
-- Desenvolvi a NavBar e a tela home com a exibição das fotos e raça dos gatos, tendo um botão de favoritar apenas ilustrativo. Inserir o filtro por nome da raça.
-- Desenvolvi a BottomNavBar e corrigi a chamada do NavBar no MainActivity.
-- Desenvolvi a tela de detalhes da raça com nome, origem, temperamento e descrição.
-- Implementei a funcionalidade de favoritos, incluindo na página home e na página de detalhes.
-- Desenvolvi a tela de de favoritos que apresenta também a expectativa de vida.
-- Implementado a paginação, ele busca sempre as dez primeiras raças e vai carregando a partir disso. O search funciona com os dados carregados.
+## 🚀 Passos de Implementação
+- Criação do model Breed para mapear os dados da API (nome, origem, temperamento, descrição, expectativa de vida, imagem).
+- Configuração do Retrofit para comunicação com a Cat API, incluindo autenticação via token.
+- Implementação do BreedRepository para gerenciar os dados vindos da API e do banco local.
+- Desenvolvimento do BreedViewModel usando StateFlow para gerenciar estados de dados, carregamento e erros.
+- Criação do banco local com Room (BreedEntity, DAO, AppDatabase) para persistência offline.
+- Integração do banco local com a Repository para salvar dados da API localmente.
+- Implementação das telas com Jetpack Compose, incluindo lista de raças, busca e botões para favoritos.
+- Desenvolvimento da navegação entre telas usando Jetpack Navigation Component.
+- Implementação da tela de detalhes da raça, exibindo informações completas e botão para favoritos.
+- Tela de favoritos que exibe as raças salvas e a média da expectativa de vida.
+- Paginação: Carregamento inicial das 10 primeiras raças, com mais raças carregadas conforme a rolagem.
+- Tratamento de erros: Implementação de AlertDialog para exibir erros ao usuário de forma clara.
 
+## 💻 Como Rodar o Projeto
+1. Clone o repositório:
+```bash
+git clone https://github.com/seu-usuario/catlogue.git
+```
+2. Abra no Android Studio (recomendo a versão mais recente).
 
+3. Configure seu ambiente com SDK Android 31+ e Kotlin atualizado.
+
+4. Faça o build do projeto e rode no emulador ou dispositivo físico.
+
+5. Certifique-se de adicionar sua chave de API da Cat API no local adequado (arquivo gradle.properties ou variável de ambiente, conforme seu setup).
+
+![Tela inicial do aplicativo](image.png)
+![Tela de detalhes de uma das raças (American Shorthair)](image-1.png)
+![Tela de favoritos](image-2.png)
